@@ -16,7 +16,15 @@ if (isset($_REQUEST['add_message'])) {
     <P> Messages</P>
     <ol>
 <?php
-$sql = "SELECT * from messages";
+ $where_clause="";
+ // filtering messages
+ if (isset($_REQUEST['filter_messages'])) {
+ $string = $_REQUEST['string'];
+ $where_clause= " WHERE name LIKE '%" . $string . "%'";
+ }
+ $sql = "SELECT * from messages" . $where_clause;
+ echo $sql;
+ echo "<BR/><BR/>";
     $messages = $db->select($sql);
     foreach ($messages as $msg)://returned as objects
         echo "<li>";
@@ -25,6 +33,21 @@ $sql = "SELECT * from messages";
     endforeach;
     ?>
 </ol>
+<hr>
+<P>Messages filtering</P>
+<form method="post" action="messages.php">
+ <table>
+ <tr>
+ <td>Title contains: </td>
+ <td>
+ <label for="name"></label>
+ <input required type="text" name="string" id="string" size="80"/>
+ </td>
+ </tr>
+ </table>
+ <input type="submit" id= "submit"
+value="Find messages" name="filter_messages">
+</form>
 <hr>
 <P>Navigation</P>
 <?php
